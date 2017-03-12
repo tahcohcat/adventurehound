@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Adventure Hound</string>
+    <string name="listview_activity_name">Adventure Hound</string>
+    <string name="searchresults_activity_name">Search Results</string>
+    <string name="filter_activity_name">Filter Activity</string>
+    <string name="single_item_activity_name">Activity</string>
+
+    <string name="options_settings">Options</string>
+    <string name="listviewgrid">TextView</string>
+    <string name="activityName">listview</string>
+
+    <string name="default_db">activity_list08</string>
+    <string name="activity_position">activity_position</string>
+    <string name="activity_list_id">activity_list_id</string>
+    <string name="preference_file_key">com.example.willeman.thingstodo_proofofconcept</string>
+
+    <string name="filter_keyword">Filter</string>
+    <string name="alphabetic_sort_keyword">A-Z</string>
+    <string name="rating_sort_keyword">Rating</string>
+    <string name="price_sort_keyword">Price</string>
+
+    <string name="search_title">Search</string>
+    <string name="search_hint">Adventure Hound</string>
+    <string name="adventurehound_logo">advhound_hipster_logo</string>
+    <string name="hipster_mustache">hipster_mustache</string>
+    <string name="hipster_go_icon">hipster_go_icon</string>
+    <string name="delete_icon">delete_icon</string>
+
+    <string name="cat_sport_label">Sport</string>
+    <string name="cat_art_label">Art</string>
+    <string name="cat_food_label">Food</string>
+    <string name="cat_adventure_label">Adventure</string>
+    <string name="cat_entertainment_label">Entertainment</string>
+    <string name="cat_other_label">Other</string>
+
+    <string name="time_range01">15mins</string>
+    <string name="time_range02">60mins</string>
+    <string name="time_range03">4hours</string>
+    <string name="time_range04">day</string>
+    <string name="time_range05">none</string>
+
+    <string name="price_range01"><![CDATA[<]]>R100</string>
+    <string name="price_range02"><![CDATA[<]]>R250</string>
+    <string name="price_range03"><![CDATA[<]]>R500</string>
+    <string name="price_range04"><![CDATA[<]]>R1K</string>
+    <string name="price_range05">none</string>
+
+    <string name="rating_range00">0</string>
+    <string name="rating_range01">1</string>
+    <string name="rating_range02">2</string>
+    <string name="rating_range03">3</string>
+    <string name="rating_range04">4</string>
+    <string name="rating_range05">5</string>
+
+    <string name="bundle_type">bundle_type</string>
+    <string name="filter_bundle">filter_bundle</string>
+    <string name="list_all_bundle">list_all_bundle</string>
+    <string name="search_bundle">search_bundle</string>
+    <string name="activity_bundle">activity_bundle</string>
+    <string name="update_single_item_bundle">update_single_item_bundle</string>
+    <string name="activity_bundle_type">activity_bundle_type</string>
+
+    <string name="documnet_id_unset">""</string>
+</resources>

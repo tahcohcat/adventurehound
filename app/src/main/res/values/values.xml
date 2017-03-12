@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer
+        name="activity_position_unset">-1</integer>
+
+    <integer
+        name="activity_rating_unset">0</integer>
+
+    <integer
+        name="activity_price_unset">-1</integer>
+
+    <integer
+        name="price_expensive_threshold">500</integer>
+
+    <integer
+        name="long_timelength_days_threshold">1</integer>
+
+    <integer
+        name="long_timelength_hours_threshold">5</integer>
+
+
+    <integer
+        name="integer_unset">-1</integer>
+
+
+</resources>

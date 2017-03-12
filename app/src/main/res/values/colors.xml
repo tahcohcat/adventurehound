@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2d2a2a</color>
+    <color name="colorPrimaryDark">#417081</color>
+    <color name="colorAccent">#af5575</color>
+
+    <color name="colorBackground">#b6b1b1</color>
+
+    <color name="colorTagEntertainment">#d1c897</color>
+    <color name="colorTagSport">#d1ab97</color>
+    <color name="colorTagArt">#d197bc</color>
+    <color name="colorTagAdventure">#97a8d1</color>
+    <color name="colorTagDefault">#97d0d1</color>
+
+</resources>

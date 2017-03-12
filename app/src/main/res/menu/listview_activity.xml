@@ -1,0 +1,39 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.willeman.adventurehound.MainActivity">
+
+    <item android:id="@+id/search"
+        android:title="@string/search_title"
+        android:icon="@drawable/ic_search_24dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.widget.SearchView" />
+
+    <item android:id="@+id/show_hide_options_drawer_icon"
+        android:title="@string/search_title"
+        android:icon="@drawable/ic_menu_24dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        />
+
+    <item
+        android:id="@+id/actionbar_options_item"
+        android:orderInCategory="100"
+        android:title="@string/options_settings"
+        app:showAsAction="never" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_gravity="center"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/ic_default_activity_01" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="TextView" />
+
+</menu>
