@@ -14,8 +14,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tahcohcat/adventurehound.git"
+    "url": "git://github.com/tahcohcat/adventurehound.git"
   },
+  "dependencies": {
+    "couchbase-lite-android": "^1.2.1",
+	"json-simple": "^1.1.1",
+	"gson":"^2.7"
+  },	
   "devDependencies": {
     "couchbase-lite-android": "^1.2.1",
 	"json-simple": "^1.1.1",
