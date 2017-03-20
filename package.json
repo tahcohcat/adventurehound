@@ -1,0 +1,33 @@
+{
+  "name": "adventurehound",
+  "version": "1.0.0",
+  "description": "A basic activity listing application using NoSql customizable database.",
+  "keywords": [
+	"no-sql",
+	"test"
+  ],
+  "homepage": "http://github.com/tahcohcat/adventurehound/",
+  "author": {
+    "name": "tahcohcat",
+    "url": "https://github.com/tahcohcat"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tahcohcat/adventurehound.git"
+  },
+  "main": "dist/js/epoch.js",
+  "dependencies": {
+    "couchbase-lite-android": "^1.2.1",
+	"json-simple","^1.1.1"
+	"gson","^2.7"
+  },
+  "devDependencies": {
+    "couchbase-lite-android": "^1.2.1",
+	"json-simple","^1.1.1"
+	"gson","^2.7"
+
+  },
+  "scripts": {    
+  }
+}
