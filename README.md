@@ -3,7 +3,7 @@
 <a href="https://david-dm.org/tahcohcat/adventurehound/?type=dev"><img src="https://david-dm.org/tahcohcat/adventurehound/dev-status.svg" alt="devDependency Status"></a>
 
 
-Simple Android application for creating, querying and viewing custom social activity lists. Uses CouchbaseLite. Work in progress. 
+Simple Android application (in the making) for creating, querying and viewing custom social activity lists. Uses [CouchBase Mobile](https://www.couchbase.com/nosql-databases/couchbase-mobile). 
 
 ### Screenshots
 
