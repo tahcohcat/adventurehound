@@ -10,11 +10,13 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles 'proguard-rules.txt'
         }
     }
 
@@ -25,19 +27,29 @@ android {
     }
 }
 
+repositories { jcenter() }
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // Required -- JUnit 4 framework
+    androidTestCompile "org.mockito:mockito-core:2.+"
+
     testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    compile 'com.android.support.test:runner:0.4.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
+    androidTestCompile 'com.android.support:appcompat-v7:23.2.1'
+    androidTestCompile 'com.android.support:design:23.2.1'
     compile 'com.couchbase.lite:couchbase-lite-android:1.2.1'
     compile files('libs/json-simple-1.1.1.jar')
     compile files('libs/json-simple-1.1.jar')
     compile files('json-simple-1.1.1.jar')
     compile files('gson-2.7.jar')
-
     //compile files('libs/couchbase-lite-android-1.2.1-android_community/couchbase-lite-android-1.2.1/couchbase-lite-java-core-1.2.1.jar')
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.1.0'
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
 }

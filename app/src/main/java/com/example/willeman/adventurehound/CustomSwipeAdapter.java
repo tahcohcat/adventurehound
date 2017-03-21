@@ -317,6 +317,18 @@ public class CustomSwipeAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
 
+        if (position == activityItemMap.size())
+        {
+            try {
+                ActivityListView lv = (ActivityListView) this.context;
+                lv.getItemsMap();
+            }
+            catch (Exception ex)
+            {
+                Log.e(TAG,"",ex);
+            }
+        }
+
         Holder holder=new Holder();
         holder.visibleIconCounter=0;
         View rowView;

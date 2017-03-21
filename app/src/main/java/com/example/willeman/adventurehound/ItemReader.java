@@ -27,21 +27,71 @@ public class ItemReader {
 
     public static final String TAG = "TTD.ItemRetriever";
     private Resources resources;
+    private static int TabBatchSize = 20;
+    private Object startKey = null;
+    private Boolean isQueryPending = false;
 
     public ItemReader()
     {
         resources = null;
     }
 
+    /*
+    public Bundle getMatchingDocuments(
+            android.content.Context context,
+            String databaseName,
+            String filterKey,
+            String filterValue) {
+        Database database = null;
+
+        try {
+            Manager manager = new Manager(new AndroidContext(context), Manager.DEFAULT_OPTIONS);
+            database = manager.getDatabase(databaseName);
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting database", e);
+            return null;
+        }
+
+        Bundle bundle = new Bundle();
+
+        View categoryView = database.getView("categories");
+        categoryView.setMap(new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                List<String> phones = (List) document.get("phones");
+                for (String phone : phones) {
+                    emitter.emit(phone, document.get("name"));
+                }
+            }
+        }, "2");
+
+        return bundle;
+    }
+    */
+
+
+
     //TODO: refactor these two methods to reuse common code
-    public Bundle getAllDocumentsBundle(android.content.Context context, String databaseName)
+    public Bundle getDocumentsBundle(
+            android.content.Context context,
+            String databaseName,
+            FilterCriteria filter)
     {
+        if (databaseName == null)
+        {
+            Log.e(TAG, "Error: Database name was null");
+
+            return null;
+        }
+
         Manager manager = null;
         Database database = null;
 
         try {
             manager = new Manager(new AndroidContext(context), Manager.DEFAULT_OPTIONS);
             database = manager.getDatabase(databaseName);
+
+            //Bundle test = getDocumentsBundle(context,databaseName, filter);
             //addDefaultActivities(database);
 
         } catch (Exception e) {
@@ -52,35 +102,60 @@ public class ItemReader {
         Bundle bundle = new Bundle();
 
         try {
+
             Query query = database.createAllDocumentsQuery();
+            query.setDescending(true);
+
+            if (this.startKey == null)
+            {
+                this.startKey = query.getStartKey();
+            }
+
+            query.setStartKey(this.startKey);
             query.setAllDocsMode(Query.AllDocsMode.ALL_DOCS);
             QueryEnumerator result = query.run();
-
+            isQueryPending = true;
 
             int rowCount = 0;
             for (Iterator<QueryRow> it = result; it.hasNext(); ) {
 
+                //performance
+                if (rowCount >= TabBatchSize) {
+                    startKey = query.getEndKey();
+                    return bundle;
+                }
                 QueryRow row = it.next();
                 Document document = row.getDocument();
                 String docStr = String.valueOf(document.getProperties());
-                Log.d(TAG, "retrievedDocument=" + String.valueOf(document.getProperties()));
+                //Log.d(TAG, "retrievedDocument=" + String.valueOf(document.getProperties()));
+
+                //if (!filter.isIncluded(document))
+                //{
+                 //   continue;
+                //}
+                /*
+                if (!filterKey.isEmpty() && (!filterValue.isEmpty())) {
+                    String filterKeyValue = (String) document.getProperty(filterKey);
+                    if ((filterKeyValue == null) || (!filterKeyValue.equalsIgnoreCase(filterValue))) {
+                        continue;
+                    }
+                }
+                */
 
                 String activity = (String) document.getProperty("activity");
                 String details = (String) document.getProperty("details");
                 String tagString = (String) document.getProperty("tags"); //TODO: to be replaced with attributes
                 String attrString = (String) document.getProperty("attributes");
 
-                Map<String,String> attributes = new HashMap<>();
-                if (attrString!=null) {
+                Map<String, String> attributes = new HashMap<>();
+                if (attrString != null) {
                     JSONObject map = new JSONObject();
 
                     try {
                         Type type = new TypeToken<HashMap<String, String>>() {
                         }.getType();
                         attributes = new Gson().fromJson(attrString, type);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         Log.e(TAG, ex.getStackTrace().toString());
                     }
                 }
@@ -97,24 +172,27 @@ public class ItemReader {
 
                 Log.d(TAG, "retrievedDocument.activity=" + activity);
                 String activitySerialised = "";
+                TaskListDocument activityItem = null;
                 try {
                     Gson gson = new GsonBuilder().create();
-                    TaskListDocument activityItem =
+                    activityItem =
                             new TaskListDocument(document.getId(), activity, details, false, tags, attributes);
                     activitySerialised = gson.toJson(activityItem);
                 } catch (Exception e) {
                     Log.e(TAG, "Error: Parsing Activity JSON", e);
                 }
 
-                //VALIDATION OF JSON ONLY
-                try
-                {
-                    Gson gson = new GsonBuilder().create();
-                    TaskListDocument activityItem = gson.fromJson(activitySerialised, TaskListDocument.class);
-                    String activityfromjson = activityItem.getActivity();
+                if (!filter.isIncluded(activityItem)) {
+                    continue;
                 }
-                catch (Exception e)
-                {
+
+
+                //VALIDATION OF JSON ONLY
+                try {
+                    Gson gson = new GsonBuilder().create();
+                    activityItem = gson.fromJson(activitySerialised, TaskListDocument.class);
+                    String activityfromjson = activityItem.getActivity();
+                } catch (Exception e) {
                     Log.e(TAG, "Error: Parsing Activity JSON", e);
                 }
 
@@ -125,6 +203,12 @@ public class ItemReader {
                     Log.w(TAG, "Conflict in document: %s", row.getDocumentId());
                 }
             }
+
+            //for next query
+            startKey = query.getEndKey();
+
+            //assuming we have all the docs now..
+            isQueryPending = false;
             return bundle;
 
         } catch (Exception e) {
@@ -133,6 +217,7 @@ public class ItemReader {
         }
     }
 
+    /*
     public List<TaskListDocument> getAllDocuments(android.content.Context context, String databaseName)
     {
         Manager manager = null;
@@ -196,6 +281,7 @@ public class ItemReader {
             return null;
         }
     }
+    */
 
     public void setResources(Resources resources)
     {

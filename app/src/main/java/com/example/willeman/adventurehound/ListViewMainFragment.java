@@ -143,7 +143,7 @@ public class ListViewMainFragment extends android.support.v4.app.Fragment {
             //    : interface. That way getting rid of CouchBase would not mean massive
             //    : refactor.
 
-            Bundle bundle = new ItemReader().getAllDocumentsBundle(parent, parent.dataBaseName);
+            Bundle bundle = new ItemReader().getDocumentsBundle(parent, parent.dataBaseName, new FilterCriteria());
 
             if (bundle == null) {
                 Log.e(TAG, "ActivityListView: Error: ItemRetriever.getAllDocuments returned null for list '" + parent.dataBaseName + "'");
@@ -158,11 +158,14 @@ public class ListViewMainFragment extends android.support.v4.app.Fragment {
             }
 
             Map<Integer, TaskListDocument> itemMap = parent.extractActivityItems(bundle);
-            Map<Integer, TaskListDocument> filteredItems = parent.filterItemsOnSearch(query, itemMap);
+
+            //no longer needed
+            //Map<Integer, TaskListDocument> filteredItems = parent.filterItemsOnSearch(query, itemMap);
+
             parent.lv = (ListView) rootView.findViewById(R.id.activities_list_view);
             parent.lv.setAdapter(new CustomSwipeAdapterFactory().create(
                     parent,
-                    filteredItems,
+                    itemMap,
                     parent.lv,
                     parent));
 
@@ -217,12 +220,12 @@ public class ListViewMainFragment extends android.support.v4.app.Fragment {
                         bundle.getString(getResources().getString(R.string.filter_bundle)) + "]");
             }
 
-            Map<Integer, TaskListDocument> itemMap = parent.getAllItemsMap();
-            Map<Integer, TaskListDocument> filteredItems = parent.filterItemsOnCriteria(filter, itemMap);
+            Map<Integer, TaskListDocument> itemMap = parent.getItemsMap(filter);
+            //Map<Integer, TaskListDocument> filteredItems = parent.filterItemsOnCriteria(filter, itemMap);
             parent.lv = (ListView) rootView.findViewById(R.id.activities_list_view);
             parent.lv.setAdapter(new CustomSwipeAdapterFactory().create(
                     parent,
-                    filteredItems,
+                    itemMap,
                     parent.lv,
                     parent));
             return;
@@ -264,7 +267,7 @@ public class ListViewMainFragment extends android.support.v4.app.Fragment {
 
     //Refresh List - Get all items (unfiltered list)
     private void refreshActivityList(ActivityListView parent, View rootView) {
-        Map<Integer, TaskListDocument> itemMap = parent.getAllItemsMap();
+        Map<Integer, TaskListDocument> itemMap = parent.getItemsMap();
 
         //TODO: warning! changed from listView - not sure this is right id
         parent.lv = (ListView) rootView.findViewById(R.id.activities_list_view);
@@ -273,6 +276,7 @@ public class ListViewMainFragment extends android.support.v4.app.Fragment {
                 itemMap,
                 parent.lv,
                 parent));
+
     }
 }
 

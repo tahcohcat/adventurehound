@@ -39,7 +39,7 @@ public class ListViewUpcomingFragment extends android.support.v4.app.Fragment {
 
         assert(parent!=null);
 
-        Bundle bundle = new ItemReader().getAllDocumentsBundle(parent, parent.dataBaseName);
+        Bundle bundle = new ItemReader().getDocumentsBundle(parent, parent.dataBaseName, new FilterCriteria(true)); //do not filter
 
         if (bundle == null) {
             Log.e(TAG, "ActivityListView: Error: ItemRetriever.getAllDocuments returned null for list '" + parent.dataBaseName + "'");
@@ -64,7 +64,7 @@ public class ListViewUpcomingFragment extends android.support.v4.app.Fragment {
 
     private void refreshUpcomingActivityList(ActivityListView parent, View rootView) {
 
-        Map<Integer, TaskListDocument> itemMap = parent.getAllItemsMap();
+        Map<Integer, TaskListDocument> itemMap = parent.getItemsMap();
 
         Map<Integer, TaskListDocument> immenentItemsMap = new HashMap<>();
 

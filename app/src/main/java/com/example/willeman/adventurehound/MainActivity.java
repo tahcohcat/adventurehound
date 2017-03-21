@@ -125,8 +125,12 @@ public class MainActivity extends AppCompatActivity {
 
                 //TODO: replaced with sharedprefs...remove in time..
                 bundle.putString(getResources().getString(R.string.activity_list_id),dataBaseName);
-                bundle.putString(getResources().getString(R.string.activity_bundle_type),
+                bundle.putString(
+                        getResources().getString(R.string.activity_bundle_type),
                         getResources().getString(R.string.list_all_bundle));
+                bundle.putString("sender_name","MainActivity");
+                bundle.putString("sender_id",this.toString());
+                bundle.putString("bundle_id",bundle.toString());
 
                 Intent intent = new Intent(mContext, ActivityListView.class);
                 intent.putExtras(bundle);
@@ -229,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
     private void addDefaultActivities(Database database) {
 
         Map<String,String> attributes = new HashMap<>();
-
         createActivityDocWithAttributes(database, "Fairview Winefarm", "Big selection of tastes", Arrays.asList("category:" + getResources().getString(R.string.cat_food_label)),null);
         createActivityDocWithAttributes(database, "Surfing", "Strand beach on a calm day", Arrays.asList("category:" + getResources().getString(R.string.cat_sport_label)),null);
         createActivityDocWithAttributes(database, "SUP", "Where to rent?", Arrays.asList("category:"  + getResources().getString(R.string.cat_sport_label)),null);

@@ -1,5 +1,6 @@
 package com.example.willeman.adventurehound;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -140,7 +141,9 @@ public class FilterActivity extends AppCompatActivity {
                     Log.e(TAG, "Error: Serialising of FilterCriteria to JSON", e);
                 }
                 intent.putExtras(bundle);
-                startActivity(intent);
+                //startActivity(intent);
+                setResult(Activity.RESULT_OK, intent);
+
                 finish();
             }
         });

@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,7 @@ import com.google.gson.GsonBuilder;
 
 public class ActivityListView extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    private static final int FILTER_RETURN_VALUE = 10;
     ListViewPagerAdapter mListViewPagerAdapter;
     ViewPager mViewPager;
 
@@ -104,6 +107,19 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        Intent i = getIntent();
+
+        if (getIntent().hasExtra(getResources().getString(R.string.activity_bundle_type)))
+        {
+            Log.e(TAG,"Activity Bundle Found");
+            if (getIntent().getExtras().containsKey(getResources().getString(R.string.filter_bundle))) {
+                handleBundle(getIntent().getExtras());
+            }
+            if (getIntent().getExtras().containsKey(getResources().getString(R.string.list_all_bundle))) {
+                handleBundle(getIntent().getExtras());
+            }
+        }
+
     }
 
     public void onItemClick(AdapterView<?> l, View view, int position, long id) {
@@ -126,7 +142,12 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
 
             if (getResources().getString(R.string.filter_keyword).equalsIgnoreCase(value))
             {
-                startActivity(new Intent(this, FilterActivity.class));
+                startActivityForResult(new Intent(this, FilterActivity.class),FILTER_RETURN_VALUE);
+
+                //startActivity(new Intent(this, FilterActivity.class));
+                //untested!!!
+                //TODO: test
+                //finish();
             }
         }
         catch (Exception ex)
@@ -134,6 +155,20 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
             Log.e(TAG,"",ex);
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        this.intent = intent;
+        switch(requestCode) {
+            case (FILTER_RETURN_VALUE) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    handleBundle(intent.getExtras());
+                }
+                break;
+            }
+        }
     }
 
     private void handleBundle(Bundle bundle) {
@@ -159,12 +194,19 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
                         bundle.getString(getResources().getString(R.string.filter_bundle)) + "]");
             }
 
-            Map<Integer, TaskListDocument> itemMap = getAllItemsMap();
-            Map<Integer, TaskListDocument> filteredItems = filterItemsOnCriteria(filter, itemMap);
+            Map<Integer, TaskListDocument> itemMap = getItemsMap(filter);
+            //Map<Integer, TaskListDocument> filteredItems = filterItemsOnCriteria(filter, itemMap);
             lv = (ListView) findViewById(R.id.activities_list_view);
+
+            if (lv == null)
+            {
+                setContentView(R.layout.tabbed_parent_layout);
+                lv = (ListView) findViewById(R.id.activities_list_view);
+            }
+
             lv.setAdapter(new CustomSwipeAdapterFactory().create(
                     this,
-                    filteredItems,
+                    itemMap,
                     lv,
                     this));
             return;
@@ -204,7 +246,7 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
 
     //Refresh List - Get all items (unfiltered list)
     private void refreshActivityList() {
-        Map<Integer, TaskListDocument> itemMap = getAllItemsMap();
+        Map<Integer, TaskListDocument> itemMap = getItemsMap();
         lv = (ListView) findViewById(R.id.activities_list_view);
         lv.setAdapter(new CustomSwipeAdapterFactory().create(
                 this,
@@ -223,17 +265,26 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
         */
     }
 
-    protected Map<Integer, TaskListDocument> getAllItemsMap() {
-        return getAllItemsMap(new ItemReader().getAllDocumentsBundle(
-                this, this.dataBaseName));
+
+    //retrieves all items
+    protected Map<Integer, TaskListDocument> getItemsMap() {
+        return getAllItemsMap(new ItemReader().getDocumentsBundle(
+                this, getDataBaseName(), new FilterCriteria(true))); //no filter
+    }
+
+    protected Map<Integer, TaskListDocument> getItemsMap(FilterCriteria filter) {
+        return getAllItemsMap(new ItemReader().getDocumentsBundle(
+                this, getDataBaseName(), filter));
     }
 
     private Map<Integer, TaskListDocument> getAllItemsMap(Bundle bundle) {
         if (bundle == null) {
-            ImageView view = (ImageView) findViewById(R.id.filter_activity_button);
-            Snackbar.make(view, "Error: no data found for list " + this.dataBaseName, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            return null;
+            //ImageView view = (ImageView) findViewById(R.id.avatar);
+            //if (this.dataBaseName == null) { this.dataBaseName = "null"; }
+            //Snackbar.make(view, "Error: no data found for list " + this.dataBaseName, Snackbar.LENGTH_LONG)
+             //      .setAction("Action", null).show();
+            Log.e(TAG,"Error: no items found for database");
+            return new HashMap<Integer,TaskListDocument>();
         }
         return extractActivityItems(bundle);
     }
@@ -260,6 +311,7 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
         return items;
     }
 
+    //TODO: to remove
     protected Map<Integer, TaskListDocument> filterItemsOnSearch(
             String query,
             Map<Integer, TaskListDocument> items) {
@@ -377,4 +429,14 @@ public class ActivityListView extends AppCompatActivity implements AdapterView.O
         client.disconnect();
     }
 
+    public String getDataBaseName() {
+        if (this.dataBaseName != null) {
+            return this.dataBaseName;
+        }
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.preference_file_key), getApplicationContext().MODE_PRIVATE);
+
+        this.dataBaseName = sharedPref.getString(getString(R.string.activity_list_id),null);
+        return this.dataBaseName;
+    }
 }
